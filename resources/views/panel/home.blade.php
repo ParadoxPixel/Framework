@@ -1,4 +1,4 @@
-@layout('panel')
+@extends('panel')
 
 @yield('page', 'Dashboard')
 

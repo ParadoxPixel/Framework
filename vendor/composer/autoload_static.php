@@ -15,6 +15,11 @@ class ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66
         array (
             'League\\Uri\\' => 11,
         ),
+        'J' => 
+        array (
+            'Jenssegers\\Agent\\' => 17,
+            'Jaybizzle\\CrawlerDetect\\' => 24,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -27,6 +32,28 @@ class ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66
             0 => __DIR__ . '/..' . '/league/uri/src',
             1 => __DIR__ . '/..' . '/league/uri-interfaces/src',
         ),
+        'Jenssegers\\Agent\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jenssegers/agent/src',
+        ),
+        'Jaybizzle\\CrawlerDetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'D' => 
+        array (
+            'Detection' => 
+            array (
+                0 => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/namespaced',
+            ),
+        ),
+    );
+
+    public static $classMap = array (
+        'Mobile_Detect' => __DIR__ . '/..' . '/mobiledetect/mobiledetectlib/Mobile_Detect.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -34,6 +61,8 @@ class ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcb779cb92ca542a3d0b5c75228c0be66::$classMap;
 
         }, null, ClassLoader::class);
     }

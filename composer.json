@@ -4,6 +4,7 @@
       "ext-pdo": "*",
       "ext-json": "*",
       "ext-openssl": "*",
-      "ext-mbstring": "*"
+      "ext-mbstring": "*",
+        "jenssegers/agent": "^2.6"
     }
 }

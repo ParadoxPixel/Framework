@@ -1,0 +1,1 @@
+<p>Home Route: <?php echo route('home'); ?></p>

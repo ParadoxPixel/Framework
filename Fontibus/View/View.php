@@ -20,7 +20,7 @@ class View {
             throw new Exception('View not found', 404);
 
         $parameters = $this->parameters;
-        //if(!file_exists(storage_path().DIRECTORY_SEPARATOR.'views/'.$this->cache_name))
+        if(!file_exists(storage_path().DIRECTORY_SEPARATOR.'views/'.$this->cache_name))
             $this->parse();
 
         foreach ($parameters as $key => $value)
@@ -36,7 +36,7 @@ class View {
 
     private function parse(): void {
         $content = file_get_contents(root_path().DIRECTORY_SEPARATOR.'resources/views/'.$this->name);
-        preg_match('/^@layout\(\'([._a-zA-Z0-9]+)\'\)(?s)(.*)$/', $content, $matches);
+        preg_match('/^@extends\(\'([._a-zA-Z0-9]+)\'\)(?s)(.*)$/', $content, $matches);
         $matches = array_filter($matches);
         if(!empty($matches)) {
             $layout = $matches[1];
