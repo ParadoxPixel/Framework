@@ -1,0 +1,1 @@
+<p>Home Route: {{ route('home') }}</p>

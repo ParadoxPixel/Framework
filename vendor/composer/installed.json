@@ -1,0 +1,197 @@
+[
+    {
+        "name": "league/uri",
+        "version": "6.2.0",
+        "version_normalized": "6.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/uri.git",
+            "reference": "7b29ca33b287b4277d5ce7c26bc1be5d4118b484"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/uri/zipball/7b29ca33b287b4277d5ce7c26bc1be5d4118b484",
+            "reference": "7b29ca33b287b4277d5ce7c26bc1be5d4118b484",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*",
+            "league/uri-interfaces": "^2.1",
+            "php": "^7.2",
+            "psr/http-message": "^1.0"
+        },
+        "conflict": {
+            "league/uri-schemes": "^1.0"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.16",
+            "phpstan/phpstan": "^0.12",
+            "phpstan/phpstan-phpunit": "^0.12",
+            "phpstan/phpstan-strict-rules": "^0.12",
+            "phpunit/phpunit": "^7.0 | ^8.0"
+        },
+        "suggest": {
+            "ext-fileinfo": "Needed to create Data URI from a filepath",
+            "ext-intl": "Needed to improve host validation",
+            "league/uri-components": "Needed to easily manipulate URI objects"
+        },
+        "time": "2020-02-08T16:31:57+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "6.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "League\\Uri\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ignace Nyamagana Butera",
+                "email": "nyamsprod@gmail.com",
+                "homepage": "https://nyamsprod.com"
+            }
+        ],
+        "description": "URI manipulation library",
+        "homepage": "http://uri.thephpleague.com",
+        "keywords": [
+            "data-uri",
+            "file-uri",
+            "ftp",
+            "hostname",
+            "http",
+            "https",
+            "middleware",
+            "parse_str",
+            "parse_url",
+            "psr-7",
+            "query-string",
+            "querystring",
+            "rfc3986",
+            "rfc3987",
+            "rfc6570",
+            "uri",
+            "uri-template",
+            "url",
+            "ws"
+        ]
+    },
+    {
+        "name": "league/uri-interfaces",
+        "version": "2.1.0",
+        "version_normalized": "2.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/thephpleague/uri-interfaces.git",
+            "reference": "0068a469958895ceaf3afcb489c0258adfa1e406"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/thephpleague/uri-interfaces/zipball/0068a469958895ceaf3afcb489c0258adfa1e406",
+            "reference": "0068a469958895ceaf3afcb489c0258adfa1e406",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*",
+            "php": "^7.1"
+        },
+        "require-dev": {
+            "friendsofphp/php-cs-fixer": "^2.0",
+            "phpstan/phpstan": "^0.12",
+            "phpstan/phpstan-phpunit": "^0.12",
+            "phpstan/phpstan-strict-rules": "^0.12",
+            "phpunit/phpunit": "^7.0|^8.0"
+        },
+        "time": "2020-02-08T12:10:37+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "League\\Uri\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ignace Nyamagana Butera",
+                "email": "nyamsprod@gmail.com",
+                "homepage": "https://nyamsprod.com"
+            }
+        ],
+        "description": "Common interface for URI representation",
+        "homepage": "http://github.com/thephpleague/uri-interfaces",
+        "keywords": [
+            "rfc3986",
+            "rfc3987",
+            "uri",
+            "url"
+        ]
+    },
+    {
+        "name": "psr/http-message",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/http-message.git",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-08-06T14:39:51+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Http\\Message\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for HTTP messages",
+        "homepage": "https://github.com/php-fig/http-message",
+        "keywords": [
+            "http",
+            "http-message",
+            "psr",
+            "psr-7",
+            "request",
+            "response"
+        ]
+    }
+]

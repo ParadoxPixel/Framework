@@ -1,0 +1,9 @@
+{
+    "require": {
+        "league/uri": "^6.2",
+      "ext-pdo": "*",
+      "ext-json": "*",
+      "ext-openssl": "*",
+      "ext-mbstring": "*"
+    }
+}
