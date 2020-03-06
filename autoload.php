@@ -30,6 +30,7 @@ spl_autoload_register(function($class_name) {
 use Fontibus\Database\DB;
 use Fontibus\Environment\Env;
 use Fontibus\IP\IP;
+use Fontibus\Session\Session;
 use Fontibus\String\Str;
 use Fontibus\Url\Url;
 use Fontibus\View\View;
@@ -39,6 +40,14 @@ Env::init();
 if(!function_exists('env')) {
     function env(string $key, string $default = ''): string {
         return Env::get($key, $default);
+    }
+}
+
+session_start();
+Session::init();
+if(!function_exists('session')) {
+    function session(): Session {
+        return Session::getSession();
     }
 }
 

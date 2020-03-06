@@ -1,1 +1,1 @@
-<p>Home Route: <?php echo route('home'); ?></p>
+<p>CSRF-Token: <?php echo session()->has('csrf-token') ? "TRUE" : "FALSE"; ?></p>

@@ -8,4 +8,8 @@ class Kernel {
         'guest' => \App\Middleware\GuestMiddleware::class
     ];
 
+    public static array $default = [
+        \App\Middleware\CSRFMiddleware::class
+    ];
+
 }

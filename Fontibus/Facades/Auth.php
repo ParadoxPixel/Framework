@@ -61,7 +61,6 @@ class Auth {
        $user = User::find($session['user_id']);
        if(empty($user)) {
            self::$checked = true;
-           die('Error #4');
            Cookie::clearCookie('login-session');
            return;
        }

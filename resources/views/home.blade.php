@@ -1,1 +1,1 @@
-<p>Home Route: {{ route('home') }}</p>
+<p>CSRF-Token: {{ session()->has('csrf-token') ? "TRUE" : "FALSE" }}</p>

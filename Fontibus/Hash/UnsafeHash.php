@@ -2,6 +2,19 @@
 namespace Fontibus\Hash;
 
 use Exception;
+/*
+let text = Buffer.from(json.payload, 'base64').toString('utf8');
+decrypt(function(result) { Do something });
+async function decrypt(text, promise) {
+    let textParts = text.split(':');
+    let iv = Buffer.from(textParts.shift(), 'hex');
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    let decipher = Crypto.createDecipheriv('aes-256-ctr', Buffer.from(Config.key), iv);
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    promise(decrypted.toString());
+}
+*/
 
 class UnsafeHash {
 
@@ -27,8 +40,11 @@ class UnsafeHash {
             $nonce
         );
 
-        if ($encode)
-            return base64_encode($nonce.$ciphertext);
+        if ($encode) {
+            $ciphertext_hex = bin2hex($ciphertext);
+            $iv_hex = bin2hex($nonce);
+            return base64_encode($iv_hex.':'.$ciphertext_hex);
+        }
 
         return $nonce.$ciphertext;
     }
