@@ -20,7 +20,8 @@
 <div class="page">
     <div class="form">
         <form method="post" action="{{ route('login') }}">
-            @csrf()
+            @csrf
+
             <img src="{{ asset('assets/img/logo-lg.png') }}" alt="IOByte">
             @if(isset($error))
 

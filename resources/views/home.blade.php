@@ -1,1 +1,1 @@
-<p>CSRF-Token: {{ session()->has('csrf-token') ? "TRUE" : "FALSE" }}</p>
+<p>CSRF-Token: {{ session()->has('X-CSRF') ? "TRUE" : "FALSE" }}</p>

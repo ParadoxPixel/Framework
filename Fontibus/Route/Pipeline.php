@@ -29,7 +29,6 @@ class Pipeline {
      *
      */
     private static function prepareSession(): void {
-        session_destroy();
         foreach(session()->all() as $key => $value) {
             if($value['temp']) {
                 if(!array_key_exists('used', $value))
@@ -37,6 +36,8 @@ class Pipeline {
 
                 if($value['used'])
                     continue;
+
+                $value['used'] = true;
             }
 
             $_SESSION[$key] = $value;

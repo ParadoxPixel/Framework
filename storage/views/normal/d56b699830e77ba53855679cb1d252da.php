@@ -20,7 +20,8 @@
 <div class="page">
     <div class="form">
         <form method="post" action="<?php echo route('login'); ?>">
-            
+            <input type="text" name="X-CSRF" style="display: none" value="<?php echo session()->get('X-CSRF'); ?>">
+
             <img src="<?php echo asset('assets/img/logo-lg.png'); ?>" alt="IOByte">
             <?php if(isset($error)) { ?>
 

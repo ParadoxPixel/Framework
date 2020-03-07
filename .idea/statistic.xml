@@ -6,6 +6,8 @@
         <option value="$PROJECT_DIR$/vendor" />
         <option value="$PROJECT_DIR$/.idea" />
         <option value="$PROJECT_DIR$/storage" />
+        <option value="$PROJECT_DIR$/public/assets/fonts" />
+        <option value="$PROJECT_DIR$/public/assets/img" />
       </list>
     </option>
   </component>

@@ -1,1 +1,1 @@
-<p>CSRF-Token: <?php echo session()->has('csrf-token') ? "TRUE" : "FALSE"; ?></p>
+<p>CSRF-Token: <?php echo session()->has('X-CSRF') ? "TRUE" : "FALSE"; ?></p>

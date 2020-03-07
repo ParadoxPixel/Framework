@@ -10,17 +10,21 @@ class CSRFMiddleware extends Middleware {
     public static function route(Route $route) {
         $session = session();
         if($route->getMethod() === "POST") {
-            if(!$session->has('csrf-token')) {
+            if(!$session->has('X-CSRF')) {
                 throw new Exception("Page expired", 404);
             } else {
-                if(!isset($_POST['csrf-token']))
+                if(!isset($_POST['X-CSRF']))
                     throw new Exception("Page expired", 404);
 
-                if(!hash_equals($session->get('csrf-token'), $_POST['csrf-token']))
+                if(!hash_equals($session->get('X-CSRF'), $_POST['X-CSRF']))
                     throw new Exception("Page expired", 404);
             }
         } else {
-            session()->flash('csrf-token', bin2hex(random_bytes(32)));
+            try {
+                session()->flash('X-CSRF', bin2hex(random_bytes(32)));
+            } catch (Exception $e) {
+                throw new Exception("Something went wrong", 500);
+            }
         }
 
         return true;

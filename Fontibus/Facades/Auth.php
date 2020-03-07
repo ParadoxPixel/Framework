@@ -140,7 +140,7 @@ class Auth {
 
     public static function logout() {
         if(!Cookie::hasCookie('login-session'))
-            Redirect::route('login');
+            Redirect::route('home');
 
         try {
             $session = Cookie::getCookie('login-session');
@@ -162,7 +162,7 @@ class Auth {
 
         Cookie::clearCookie('login-session');
         self::$guest = true;
-        Redirect::route('login');
+        Redirect::route('home');
     }
 
 }

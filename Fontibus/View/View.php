@@ -15,7 +15,7 @@ class View {
         $this->parameters = $parameters;
     }
 
-    public function render(bool $minified = false): void {
+    public function render(): void {
         if(!file_exists(root_path().DIRECTORY_SEPARATOR.'resources/views/'.$this->name))
             throw new Exception('View not found', 404);
 
@@ -26,7 +26,7 @@ class View {
         foreach ($parameters as $key => $value)
             ${''.$key} = $value;
 
-        if($minified) {
+        if(is_bool(env('MINIFIED', 'FALSE'))) {
             include_once storage_path() . DIRECTORY_SEPARATOR . 'views/minified/' . $this->cache_name;
             return;
         }
@@ -74,6 +74,7 @@ class View {
         $content = str_replace(' }}', '; ?>', $content);
         $content = preg_replace('/@(if|foreach)\((.*)\)/', '<?php $1($2) { ?>', $content);
         $content = preg_replace('/@end(if|foreach)/', '<?php } ?>', $content);
+        $content = preg_replace('/@(csrf|CSRF)/', '<input type="text" name="X-CSRF" style="display: none" value="<?php echo session()->get(\'X-CSRF\'); ?>">', $content);
 
         preg_match_all('/@(.*)\((.*)\)/', $content, $matches, PREG_SET_ORDER);
         $matches = array_filter($matches);
