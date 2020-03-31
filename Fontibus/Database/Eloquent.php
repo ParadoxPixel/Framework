@@ -3,6 +3,7 @@ namespace Fontibus\Database;
 
 use Exception;
 use Fontibus\Collection\Collection;
+use InvalidArgumentException;
 use PDO;
 use ReflectionObject;
 use stdClass;
@@ -88,12 +89,15 @@ class Eloquent {
         return self::database()->select($fields);
     }
 
-    public function save(): bool {
+    public function update($data): bool {
         $array = [];
         foreach($this->fillable as $field)
-            $array[$field] = $this->{$field};
+            $array[$field] = $data[$field];
 
-        return (bool) DB::table($this->getTable())->where($this->key, $this->{$this->key})->update($array);
+        if($this->timestamp)
+            $array['updated_at'] = date("Y-m-d H:i:s");
+
+        return (bool) DB::table($this->getTable())->where($this->key, $data[$this->key])->update($array);
     }
 
     public function delete(): bool {
@@ -103,32 +107,16 @@ class Eloquent {
     private static function database(): DB {
         $instance = new static();
         return DB::table($instance->getTable())
-            ->type(PDO::FETCH_CLASS)
+            ->type(PDO::FETCH_KEY_PAIR)
             ->argument(get_called_class());
     }
 
-    private static function cast($destination, $sourceObject) {
-        if (is_string($destination)) {
-            $destination = new $destination();
-        }
+    private static function cast($destination, stdClass $source) {
+        $class = new $destination();
+        foreach($source as $key => $value)
+            $class->$key = $value;
 
-        $sourceReflection = new ReflectionObject($sourceObject);
-        $destinationReflection = new ReflectionObject($destination);
-        $sourceProperties = $sourceReflection->getProperties();
-        foreach ($sourceProperties as $sourceProperty) {
-            $sourceProperty->setAccessible(true);
-            $name = $sourceProperty->getName();
-            $value = $sourceProperty->getValue($sourceObject);
-            if ($destinationReflection->hasProperty($name)) {
-                $propDest = $destinationReflection->getProperty($name);
-                $propDest->setAccessible(true);
-                $propDest->setValue($destination,$value);
-            } else {
-                $destination->$name = $value;
-            }
-        }
-
-        return $destination;
+        return $class;
     }
 
 }

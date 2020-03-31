@@ -9,6 +9,7 @@ class Kernel {
     ];
 
     public static array $default = [
+        \App\Middleware\LogMiddleware::class,
         \App\Middleware\CSRFMiddleware::class
     ];
 
