@@ -1,5 +1,5 @@
 <?php
-//error_reporting(0);
+error_reporting(0);
 try {
     require_once '../autoload.php';
     \Fontibus\Route\Pipeline::init();

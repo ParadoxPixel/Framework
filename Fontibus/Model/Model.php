@@ -16,6 +16,10 @@ class Model extends Eloquent {
     }
 
     public function getAttribute(string $name) {
+        $method = $this->makeAttributeMethod('get', $name);
+        if(method_exists($this, $method))
+            return $this->$method();
+
         if(!isset($this->properties[$name]))
             return '';
 
@@ -23,6 +27,12 @@ class Model extends Eloquent {
     }
 
     public function setAttribute(string $name, $value) {
+        $method = $this->makeAttributeMethod('set', $name);
+        if(method_exists($this, $method)) {
+            $this->$method($value);
+            return;
+        }
+
         $this->properties[$name] = $value;
     }
 
@@ -36,6 +46,16 @@ class Model extends Eloquent {
 
     public function save(): bool {
         return parent::update($this->properties);
+    }
+
+    private function makeAttributeMethod(string $prefix, string $name): string {
+        $method = $prefix;
+        $args = explode("_", $name);
+        foreach ($args as $arg)
+            $method .= ucfirst($arg);
+
+        $method .= 'Attribute';
+        return $method;
     }
 
 }
