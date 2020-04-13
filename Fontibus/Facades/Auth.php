@@ -4,7 +4,8 @@ namespace Fontibus\Facades;
 use App\User;
 use Exception;
 use Fontibus\Cookie\Cookie;
-use Fontibus\Database\DB;
+use Fontibus\Query\DB;
+use Fontibus\IP\GeoIP;
 use Fontibus\Route\Redirect;
 use Fontibus\String\Str;
 
@@ -30,7 +31,7 @@ class Auth {
         if($number == 10) {
             $day = date("Y-m-d H:i:s", strtotime('-3 day'));
             $year = date("Y-m-d H:i:s", strtotime('-1 year'));
-            DB::table('sessions')->where('log_date', '<=', $year)->where('last_active', '<=', $day, '', 'OR')->delete();
+            DB::table('sessions')->where('log_date', '<=', $year)->orWhere('last_active', '<=', $day)->delete();
         }
 
         if(!Cookie::hasCookie('login-session')) {
@@ -129,6 +130,14 @@ class Auth {
         $result = DB::table('sessions')->insert([
             'user_id' => $user->id,
             'session_key' => $key
+        ]);
+
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $GeoIP = GeoIP::get($ip);
+        DB::table('login_log')->insert([
+            'user_id' => $user->id,
+            'ip' => $ip,
+            'country' => $GeoIP->country_code
         ]);
 
         if($result < 1)

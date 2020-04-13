@@ -1,9 +1,10 @@
 <?php
 namespace Fontibus\Model;
 
-use Fontibus\Database\Eloquent;
+use Fontibus\Query\Eloquent\Eloquent;
+use JsonSerializable;
 
-class Model extends Eloquent {
+class Model extends Eloquent implements JsonSerializable {
 
     private array $properties = [];
 
@@ -13,6 +14,14 @@ class Model extends Eloquent {
 
     public function __set(string $name, $value) {
         $this->setAttribute($name, $value);
+    }
+
+    public function __serialize() {
+        return $this->properties;
+    }
+
+    public function __unserialize(array $properties) {
+        $this->properties = $properties;
     }
 
     public function getAttribute(string $name) {
@@ -56,6 +65,10 @@ class Model extends Eloquent {
 
         $method .= 'Attribute';
         return $method;
+    }
+
+    public function jsonSerialize() {
+        return $this->properties;
     }
 
 }

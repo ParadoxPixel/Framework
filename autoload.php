@@ -1,11 +1,5 @@
 <?php
 define('ROOT_PATH', dirname(__FILE__));
-function handle_exception(Exception $error) {
-    $error_code = $error->getCode();
-    $error_message = $error->getMessage();
-    include_once ROOT_PATH.'/resources/error/error.php';
-}
-
 if(!function_exists('root_path')) {
     function root_path(): string {
         return ROOT_PATH;
@@ -27,9 +21,10 @@ spl_autoload_register(function($class_name) {
     require_once($path);
 });
 
-use Fontibus\Database\DB;
 use Fontibus\Environment\Env;
+use Fontibus\Facades\Logger;
 use Fontibus\IP\IP;
+use Fontibus\Query\DB;
 use Fontibus\Session\Session;
 use Fontibus\String\Str;
 use Fontibus\Url\Url;
@@ -58,6 +53,19 @@ if(!function_exists('url')) {
     }
 }
 
+function handle_exception(Exception $error) {
+    $error_code = $error->getCode();
+    $error_message = $error->getMessage();
+    Logger::write(json_encode([
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'method' => url()->getMethod(),
+        'path' => url()->getRequest(),
+        'code' => $error_code,
+        'message' => $error_message
+    ]));
+    include_once ROOT_PATH.'/resources/error/error.php';
+}
+
 if(!function_exists('route')) {
     function route(string $name, array $parameters = []): string {
         $path = \Fontibus\Route\Router::route($name);
@@ -83,12 +91,17 @@ if(!function_exists('asset')) {
     }
 }
 
+if(!function_exists('sanitize')) {
+    function sanitize(string $str) {
+        $str = trim($str);
+        $str = stripslashes($str);
+        $str = filter_var($str, FILTER_SANITIZE_STRING);
+        return $str;
+    }
+}
+
 DB::init([
-    'debug' => env('DEBUG', 'TRUE'),
     'charset' => env('CHARSET', 'utf8'),
-    'useCache' => env('DB_CACHE_ENABLED', 'FALSE'),
-    'cacheTime' => (int) env('DB_CACHE_TIME', '60'),
-    'cacheDir' => root_path().'storage/cache/',
     'host' => env('DB_HOST', 'localhost'),
     'port' => (int) env('DB_PORT', '3306'),
     'name' => env('DB_NAME', 'database'),

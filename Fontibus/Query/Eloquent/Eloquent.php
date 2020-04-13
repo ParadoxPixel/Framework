@@ -1,11 +1,11 @@
 <?php
-namespace Fontibus\Database;
+namespace Fontibus\Query\Eloquent;
 
 use Exception;
 use Fontibus\Collection\Collection;
-use InvalidArgumentException;
+use Fontibus\Query\DB;
+use Fontibus\Query\QueryBuilder;
 use PDO;
-use ReflectionObject;
 use stdClass;
 
 class Eloquent {
@@ -65,27 +65,27 @@ class Eloquent {
 
     public static function find($key) {
         $instance = new static();
-        $result = self::database()->where($instance->key, $key)->first();
-        if(empty($result))
+        $result = self::database()->where($instance->key, '=',$key)->first();
+        if(empty($result) || $result == false)
             return null;
 
-        return self::cast(get_called_class(), $result);
+        return $result;
     }
 
     public static function findOrFail($key) {
         $instance = new static();
         $result = self::database()->where($instance->key, $key)->first();
-        if(empty($result))
+        if(empty($result) || $result == false)
             throw new Exception('No '.self::getBaseName().' with '.$instance->key.': '.$key, 404);
 
-        return self::cast(get_called_class(), $result);
+        return $result;
     }
 
-    public static function where($where, string $op = null, string $val = null, string $type = '', string $andOr = 'AND'): DB {
-        return self::database()->where($where, $op, $val, $type, $andOr);
+    public static function where($first, $operator = null, $second = null, $type = 'and'): QueryBuilder {
+        return self::database()->where($first, $operator, $second, $type);
     }
 
-    public static function select($fields): DB {
+    public static function select($fields): QueryBuilder {
         return self::database()->select($fields);
     }
 
@@ -104,19 +104,10 @@ class Eloquent {
         return DB::table($this->getTable())->where($this->key, $this->{$this->key})->delete();
     }
 
-    private static function database(): DB {
+    private static function database(): QueryBuilder {
         $instance = new static();
         return DB::table($instance->getTable())
-            ->type(PDO::FETCH_KEY_PAIR)
-            ->argument(get_called_class());
-    }
-
-    private static function cast($destination, stdClass $source) {
-        $class = new $destination();
-        foreach($source as $key => $value)
-            $class->$key = $value;
-
-        return $class;
+            ->setFetchMode(PDO::FETCH_CLASS, get_called_class());
     }
 
 }
