@@ -1,4 +1,7 @@
 <?php
+/**
+ * Define Root/Starage path
+ */
 define('ROOT_PATH', dirname(__FILE__));
 if(!function_exists('root_path')) {
     function root_path(): string {
@@ -12,6 +15,9 @@ if(!function_exists('storage_path')) {
     }
 }
 
+/**
+ * Prepare Auto Loader for classes
+ */
 require_once(root_path().'/vendor/autoload.php');
 spl_autoload_register(function($class_name) {
     $path = root_path().'/'.$class_name . '.php';

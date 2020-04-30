@@ -17,6 +17,14 @@ class JoinClause extends QueryBuilder {
         $this->table = $table;
     }
 
+    /**
+     * Build ON
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return JoinClause
+     */
     public function on($first, $operator = null, $second = null, $type = 'and') {
         if($first instanceof Closure)
             return $this->whereNested($this->on, $first, $type);
@@ -24,10 +32,21 @@ class JoinClause extends QueryBuilder {
         return $this->whereColumn($this->on, $first, $operator, $second, $type);
     }
 
+    /**
+     * Build OR ON
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return JoinClause
+     */
     public function orOn($first, $operator = null, $second = null) {
         return $this->on($first, $operator, $second, 'or');
     }
 
+    /**
+     * Build Join Clause
+     * @return string
+     */
     public function buildClause() {
         $str = '';
         foreach($this->on as $row) {

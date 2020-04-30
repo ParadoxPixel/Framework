@@ -32,6 +32,11 @@ class QueryBuilder {
         $this->queryTemplate = Templates::$select;
     }
 
+    /**
+     * Specify select columns
+     * @param $value
+     * @return $this
+     */
     public function select($value) {
         if(is_array($value)) {
             foreach ($value as $column)
@@ -43,6 +48,11 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Pass values to be updated
+     * @param array $values
+     * @return mixed
+     */
     public function update(array $values) {
         $this->queryTemplate = Templates::$update;
         foreach ($values as $row)
@@ -55,6 +65,10 @@ class QueryBuilder {
         return $rows;
     }
 
+    /**
+     * Delete data from table
+     * @return mixed
+     */
     public function delete() {
         $this->queryTemplate = Templates::$delete;
         $sql = $this->toSQL();
@@ -65,6 +79,11 @@ class QueryBuilder {
         return $rows;
     }
 
+    /**
+     * Insert data into table
+     * @param array $value
+     * @return mixed
+     */
     public function insert(array $value) {
         if(ArrayUtil::isMulti($value)) {
             $keys = [];
@@ -93,6 +112,11 @@ class QueryBuilder {
         return $rows;
     }
 
+    /**
+     * Perform select query and get data
+     * @param bool $all
+     * @return Collection|null
+     */
     public function get($all = true) {
         $sql = $this->toSQL();
         $stmt = $this->processor->query($sql, []);
@@ -112,14 +136,32 @@ class QueryBuilder {
         return $result;
     }
 
+    /**
+     * Return only first result
+     * @return Collection|null
+     */
     public function first() {
         return $this->get(false);
     }
 
+    /**
+     * Count column
+     * @param string $column
+     * @param string|null $name
+     * @return $this
+     */
     public function count(string $column, string $name = null) {
         return $this->select(DB::raw('COUNT('.DB::quoteColumn($column).')'.(empty($name) ? $name : ' AS '.DB::quoteColumn($name))));
     }
 
+    /**
+     * Where Clause
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return $this
+     */
     public function where($first, $operator = null, $second = null, $type = 'and') {
         if($first instanceof Closure) {
             return $this->whereNested($this->where, $first, $type);
@@ -128,10 +170,24 @@ class QueryBuilder {
         return $this->whereColumn($this->where, $first, $operator, $second, $type);
     }
 
+    /**
+     * Or Where Clause
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return $this
+     */
     public function orWhere($first, $operator = null, $second = null) {
         return $this->where($first, $operator, $second, 'or');
     }
 
+    /**
+     * Handle Nested Where Clause
+     * @param array $array
+     * @param $first
+     * @param $type
+     * @return $this
+     */
     public function whereNested(array &$array, $first, $type) {
         $clause = new WhereClause($this, $type);
         $first($clause);
@@ -142,6 +198,15 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Handle Where Clause
+     * @param array $array
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return $this
+     */
     public function whereColumn(array &$array, $first, $operator = null, $second = null, $type = 'and') {
         if($first instanceof RawData) {
             $clause = DB::sanitize($first->getValue());
@@ -156,6 +221,10 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Build Where Clause
+     * @return string
+     */
     public function buildWhere() {
         $str = '';
         foreach($this->where as $row) {
@@ -168,6 +237,16 @@ class QueryBuilder {
         return $str;
     }
 
+    /**
+     * Join Clause
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @param string $where
+     * @return $this
+     */
     public function join($table, $first, $operator = null, $second = null, $type = 'inner', $where = 'on') {
         if($first instanceof Closure) {
             $clause = new JoinClause($this, $type, $table);
@@ -192,22 +271,63 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * left Join Clause
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $where
+     * @return $this
+     */
     public function leftJoin($table, $first, $operator = null, $second = null, $where = 'on') {
         return $this->join($table, $first, $operator, $second, 'left', $where);
     }
 
+    /**
+     * Right Join Clause
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $where
+     * @return $this
+     */
     public function rightJoin($table, $first, $operator = null, $second = null, $where = 'on') {
         return $this->join($table, $first, $operator, $second, 'right', $where);
     }
 
+    /**
+     * Left Outer Join Clause
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $where
+     * @return $this
+     */
     public function leftOuterJoin($table, $first, $operator = null, $second = null, $where = 'on') {
         return $this->join($table, $first, $operator, $second, 'left outer', $where);
     }
 
+    /**
+     * Right Outer Join Clause
+     * @param $table
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $where
+     * @return $this
+     */
     public function rightOuterJoin($table, $first, $operator = null, $second = null, $where = 'on') {
         return $this->join($table, $first, $operator, $second, 'right outer', $where);
     }
 
+    /**
+     * Prepare Group By
+     * @param $first
+     * @return $this
+     */
     public function groupBy($first) {
         if(is_array($first)) {
             foreach ($first as $value)
@@ -219,15 +339,31 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Prepare Order By
+     * @param string $field
+     * @param string $order
+     * @return $this
+     */
     public function orderBy(string $field, string $order = 'asc') {
         $this->orderBy = $field.' '.strtoupper($order);
         return $this;
     }
 
+    /**
+     * Prepare Order By Descending
+     * @param string $field
+     * @return $this
+     */
     public function orderByDesc(string $field) {
         return $this->orderBy($field, 'desc');
     }
 
+    /**
+     * Skip rows
+     * @param int $i
+     * @return $this
+     */
     public function skip(int $i) {
         if($i < 1)
             return $this;
@@ -236,6 +372,11 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Limit rows in result
+     * @param int $i
+     * @return $this
+     */
     public function take(int $i) {
         if($i < 1)
             return $this;
@@ -244,17 +385,32 @@ class QueryBuilder {
         return $this;
     }
 
+    /**
+     * Set custom template for query
+     * @param string $template
+     * @return $this
+     */
     public function template(string $template) {
         $this->queryTemplate = $template;
         return $this;
     }
 
+    /**
+     * Set fetch mode
+     * @param int $mode
+     * @param string|null $argument
+     * @return $this
+     */
     public function setFetchMode(int $mode, string $argument = null) {
         $this->fetch_mode = $mode;
         $this->fetch_argument = $argument;
         return $this;
     }
 
+    /**
+     * Build Query
+     * @return string|string[]
+     */
     public function toSQL() {
         $template = $this->queryTemplate;
         $template = str_replace('%TABLE%', DB::quoteColumn($this->table), $template);
@@ -274,6 +430,10 @@ class QueryBuilder {
         return $template;
     }
 
+    /**
+     * Build Select Fields
+     * @return string
+     */
     public function getSelectFields() {
         if(empty($this->select))
             return '*';
@@ -281,10 +441,18 @@ class QueryBuilder {
         return implode(', ', $this->select);
     }
 
+    /**
+     * Build Insert Fields
+     * @return string
+     */
     public function getInsertFields() {
         return implode(', ', DB::quoteColumn($this->insert['keys']));
     }
 
+    /**
+     * Build Insert Values
+     * @return string
+     */
     public function getInsertValues() {
         $str = '';
         foreach($this->insert['values'] as $row) {
@@ -297,10 +465,18 @@ class QueryBuilder {
         return $str;
     }
 
+    /**
+     * Build Update Fields
+     * @return string
+     */
     public function getUpdateFields() {
         return implode(', ', $this->update);
     }
 
+    /**
+     * Build Join
+     * @return string
+     */
     public function getJoin() {
         $join = '';
         foreach($this->join as $row) {
@@ -313,6 +489,10 @@ class QueryBuilder {
         return $join;
     }
 
+    /**
+     * Build Where
+     * @return string
+     */
     public function getWhere() {
         $where = $this->buildWhere();
         if(!empty($where))
@@ -321,6 +501,10 @@ class QueryBuilder {
         return $where;
     }
 
+    /**
+     * Build Group By
+     * @return string
+     */
     public function getGroupBy() {
         $groupBy = '';
         if(!empty($this->groupBy))
@@ -329,6 +513,10 @@ class QueryBuilder {
         return $groupBy;
     }
 
+    /**
+     * Build Order By
+     * @return string
+     */
     public function getOrderBy() {
         $orderBy = '';
         if(!empty($this->orderBy))
@@ -337,6 +525,10 @@ class QueryBuilder {
         return $orderBy;
     }
 
+    /**
+     * Build Limit
+     * @return string
+     */
     public function getLimit() {
         $limit = '';
         if($this->limit > 0)
@@ -345,6 +537,10 @@ class QueryBuilder {
         return $limit;
     }
 
+    /**
+     * Build Offset
+     * @return string
+     */
     public function getOffset() {
         $offset = '';
         if($this->offset > 0)

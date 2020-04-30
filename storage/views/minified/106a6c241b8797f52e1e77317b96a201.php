@@ -1,1 +1,1 @@
-<p>Name: <?php echo json_encode(\App\User::select(['first_name', 'sur_name'])->where('id', '=', 1)->first()); ?></p>
+<p>Content</p>

@@ -8,6 +8,10 @@ use Fontibus\View\View;
 
 class Pipeline {
 
+    /**
+     * Initiate Pipeline
+     * @throws Exception
+     */
     public static function init() {
         Router::init();
         Auth::check();
@@ -26,7 +30,6 @@ class Pipeline {
 
     /**
      * Prepare Session Data
-     *
      */
     private static function prepareSession(): void {
         foreach(session()->all() as $key => $value) {

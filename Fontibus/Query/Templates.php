@@ -3,6 +3,10 @@ namespace Fontibus\Query;
 
 class Templates {
 
+    /**
+     * Database query templates
+     * @var string
+     */
     public static string $select = 'SELECT %SELECT_FIELDS% FROM %TABLE% %JOIN% %WHERE% %GROUP_BY% %ORDER_BY% %LIMIT% %OFFSET%';
     public static string $update = 'UPDATE %TABLE% SET %UPDATE_FIELDS% %JOIN% %WHERE% %GROUP_BY% %ORDER_BY% %LIMIT% %OFFSET%';
     public static string $delete = 'DELETE FROM %TABLE% %JOIN% %WHERE% %GROUP_BY% %ORDER_BY% %LIMIT% %OFFSET%';

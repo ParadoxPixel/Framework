@@ -19,10 +19,18 @@ class Auth {
         'user_id', 'log_date', 'key'
     ];
 
+    /**
+     * Return if user is guest
+     * @return bool
+     */
     public static function isGuest(): bool {
         return self::$guest;
     }
 
+    /**
+     * Check if user is authenticated
+     * @throws Exception
+     */
     public static function check(): void {
         if(self::$checked)
             return;
@@ -92,6 +100,10 @@ class Auth {
        self::$user = $user;
     }
 
+    /**
+     * Get id of user
+     * @return int
+     */
     public static function getId(): int {
         if(empty(self::$user))
             return 0;
@@ -99,6 +111,10 @@ class Auth {
         return self::$user->id;
     }
 
+    /**
+     * Get User Model
+     * @return User|null
+     */
     public static function user() {
         if(self::$guest)
             return null;
@@ -106,6 +122,12 @@ class Auth {
         return self::$user;
     }
 
+    /**
+     * Try to log in with email and password
+     * @param string $email
+     * @param string $password
+     * @return bool
+     */
     public static function login(string $email, string $password): bool {
         if(!self::$guest)
             return true;
@@ -147,6 +169,10 @@ class Auth {
         return true;
     }
 
+    /**
+     * Logout
+     * @throws Exception
+     */
     public static function logout() {
         if(!Cookie::hasCookie('login-session'))
             Redirect::route('home');

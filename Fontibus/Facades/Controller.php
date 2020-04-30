@@ -9,6 +9,11 @@ class Controller {
 
     private array $array = [];
 
+    /**
+     * Load middlewares
+     * @param array $keys
+     * @throws Exception
+     */
     public function middleware(array $keys) {
         foreach($keys as $key) {
             if (!isset(Kernel::$middleware[$key]))
@@ -22,6 +27,11 @@ class Controller {
         }
     }
 
+    /**
+     * Check middleware's
+     * @param Route $route
+     * @return bool|mixed
+     */
     public function checkMiddleware(Route $route) {
         foreach($this->array as $middleware) {
             $bool = call_user_func([$middleware, 'route'], $route);

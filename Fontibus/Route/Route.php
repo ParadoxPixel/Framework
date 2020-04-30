@@ -27,12 +27,18 @@ class Route {
         $this->action = $action;
     }
 
+    /**
+     * Set name of routh
+     * @param string $name
+     * @return Route
+     */
     public function name(string $name): Route {
         $this->name = $name;
         return $this;
     }
 
     /**
+     * Get request method POST/GET
      * @return string
      */
     public function getMethod(): string {
@@ -40,6 +46,7 @@ class Route {
     }
 
     /**
+     * Get path
      * @return string
      */
     public function getPath(): string {
@@ -47,6 +54,7 @@ class Route {
     }
 
     /**
+     * Get name
      * @return string
      */
     public function getName(): string {
@@ -54,17 +62,27 @@ class Route {
     }
 
     /**
+     * Get parameters
      * @return array
      */
     public function getParameters(): array {
         return $this->values;
     }
 
+    /**
+     * Set settings for route parameters
+     * @param array $settings
+     * @return Route
+     */
     public function where(array $settings): Route {
         $this->settings = $settings;
         return $this;
     }
 
+    /**
+     * Parse path
+     * @param string $path
+     */
     private function formatPath(string $path): void {
         $array = explode('/', $path);
         $array = array_filter($array);
@@ -91,6 +109,11 @@ class Route {
         $this->split = $array;
     }
 
+    /**
+     * Check if path matches request
+     * @param string $request
+     * @return bool
+     */
     public function matchRequest(string $request): bool {
         $path = explode('/', $request);
         $path = array_filter($path);
@@ -134,6 +157,11 @@ class Route {
         return true;
     }
 
+    /**
+     * Execute Route
+     * @return mixed
+     * @throws Exception
+     */
     public function performAction() {
         $action = $this->action;
         $values = $this->values;

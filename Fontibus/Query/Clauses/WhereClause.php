@@ -16,6 +16,14 @@ class WhereClause extends QueryBuilder {
         $this->type = $type;
     }
 
+    /**
+     * Where Clause
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @param string $type
+     * @return WhereClause|QueryBuilder
+     */
     public function where($first, $operator = null, $second = null, $type = 'and') {
         if($first instanceof Closure)
             return $this->whereNested($this->where, $first, $type);
@@ -23,10 +31,21 @@ class WhereClause extends QueryBuilder {
         return $this->whereColumn($this->where, $first, $operator, $second, $type);
     }
 
+    /**
+     * Or Where Clause
+     * @param $first
+     * @param null $operator
+     * @param null $second
+     * @return WhereClause|QueryBuilder
+     */
     public function orWhere($first, $operator = null, $second = null) {
         return $this->where($first, $operator, $second, 'or');
     }
 
+    /**
+     * Build Nested Where Clause
+     * @return string
+     */
     public function buildClause() {
         $str = '';
         foreach($this->where as $row) {

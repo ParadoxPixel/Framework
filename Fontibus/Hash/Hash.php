@@ -5,11 +5,10 @@ use Exception;
 
 class Hash extends UnsafeHash {
 
-    const HASH_ALGO = 'sha256';
+    const HASH_ALGORITHM = 'sha256';
 
     /**
      * Hashes message using Bcrypt
-     *
      * @param string $message - plaintext message
      * @return string
      */
@@ -19,7 +18,6 @@ class Hash extends UnsafeHash {
 
     /**
      * Encrypts then MACs a message
-     *
      * @param string $message - plaintext message
      * @param string $key - encryption key (raw binary expected)
      * @param boolean $encode - set to TRUE to return a base64-encoded string
@@ -28,7 +26,7 @@ class Hash extends UnsafeHash {
     public static function encrypt($message, $key, $encode = false) {
         list($encKey, $authKey) = self::splitKeys($key);
         $ciphertext = parent::encrypt($message, $encKey);
-        $mac = hash_hmac(self::HASH_ALGO, $ciphertext, $authKey, true);
+        $mac = hash_hmac(self::HASH_ALGORITHM, $ciphertext, $authKey, true);
         if ($encode)
             return base64_encode($mac.$ciphertext);
 
@@ -36,8 +34,7 @@ class Hash extends UnsafeHash {
     }
 
     /**
-     * Decrypts a message (after verifying integrity)
-     *
+     * Decrypts a message
      * @param string $message - ciphertext message
      * @param string $key - encryption key (raw binary expected)
      * @param boolean $encoded - are we expecting an encoded string?
@@ -48,21 +45,14 @@ class Hash extends UnsafeHash {
         list($encKey, $authKey) = self::splitKeys($key);
         if ($encoded) {
             $message = base64_decode($message, true);
-            if ($message === false) {
+            if ($message === false)
                 throw new Exception('Encryption failure', 500);
-            }
         }
 
-        $hs = mb_strlen(hash(self::HASH_ALGO, '', true), '8bit');
+        $hs = mb_strlen(hash(self::HASH_ALGORITHM, '', true), '8bit');
         $mac = mb_substr($message, 0, $hs, '8bit');
         $ciphertext = mb_substr($message, $hs, null, '8bit');
-        $calculated = hash_hmac(
-            self::HASH_ALGO,
-            $ciphertext,
-            $authKey,
-            true
-        );
-
+        $calculated = hash_hmac(self::HASH_ALGORITHM, $ciphertext, $authKey, true);
         if (!self::hashEquals($mac, $calculated))
             throw new Exception('Encryption failure', 500);
 
@@ -72,23 +62,20 @@ class Hash extends UnsafeHash {
     /**
      * Splits a key into two separate keys; one for encryption
      * and the other for authenticaiton
-     *
      * @param string $masterKey (raw binary)
      * @return array (two raw binary strings)
      */
     protected static function splitKeys($masterKey) {
         return [
-            hash_hmac(self::HASH_ALGO, 'ENCRYPTION', $masterKey, true),
-            hash_hmac(self::HASH_ALGO, 'AUTHENTICATION', $masterKey, true)
+            hash_hmac(self::HASH_ALGORITHM, 'ENCRYPTION', $masterKey, true),
+            hash_hmac(self::HASH_ALGORITHM, 'AUTHENTICATION', $masterKey, true)
         ];
     }
 
     /**
      * Compare two strings without leaking timing information
-     *
      * @param string $a
      * @param string $b
-     * @ref https://paragonie.com/b/WS1DLx6BnpsdaVQW
      * @return boolean
      */
     protected static function hashEquals($a, $b) {
@@ -96,7 +83,7 @@ class Hash extends UnsafeHash {
             return hash_equals($a, $b);
 
         $nonce = openssl_random_pseudo_bytes(32);
-        return hash_hmac(self::HASH_ALGO, $a, $nonce) === hash_hmac(self::HASH_ALGO, $b, $nonce);
+        return hash_hmac(self::HASH_ALGORITHM, $a, $nonce) === hash_hmac(self::HASH_ALGORITHM, $b, $nonce);
     }
 
 }

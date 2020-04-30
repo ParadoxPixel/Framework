@@ -5,7 +5,6 @@ class IP {
 
     /**
      * Makes sure the IP used is the one of the user not of the proxy
-     *
      * @return void
      */
     public static function init(): void {

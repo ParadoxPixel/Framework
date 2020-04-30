@@ -3,6 +3,11 @@ namespace Fontibus\Collection;
 
 class ArrayUtil {
 
+    /**
+     * Get keys from multidimensional array
+     * @param array $value
+     * @return array
+     */
     public static function getKeys(array $value) {
         $keys = [];
         foreach($value as $key => $val)
@@ -11,6 +16,11 @@ class ArrayUtil {
         return $keys;
     }
 
+    /**
+     * Get values from multidimensional array
+     * @param array $value
+     * @return array
+     */
     public static function getValues(array $value) {
         $values = [];
         foreach($value as $key => $val)
@@ -19,6 +29,11 @@ class ArrayUtil {
         return $values ;
     }
 
+    /**
+     * Split multidimensional array in keys and values array
+     * @param array $value
+     * @return array
+     */
     public static function splitArray(array $value) {
         $split = [
             'keys' => [],
@@ -33,8 +48,13 @@ class ArrayUtil {
         return $split;
     }
 
-    public static function isMulti($a) {
-        foreach ($a as $key => $value)
+    /**
+     * Check if array is multidimensional
+     * @param $array
+     * @return bool
+     */
+    public static function isMulti($array) {
+        foreach ($array as $key => $value)
             if(is_array($value))
                 return true;
 

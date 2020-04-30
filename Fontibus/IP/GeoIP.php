@@ -69,10 +69,23 @@ class GeoIP {
         $this->currency_conversion = $data['geoplugin_currencyConverter'];
     }
 
+    /**
+     * Convert price to local currency
+     * @param float $price
+     * @return float
+     */
     public function convert(float $price): float {
         return $price * $this->currency_conversion;
     }
 
+    /**
+     * Calculate distance from point A to IP
+     * @param float $long
+     * @param float $lat
+     * @param string $decimal_point
+     * @param string $thousands_step
+     * @return string
+     */
     public function distance(float $long, float $lat, string $decimal_point = ',', string $thousands_step = '.'): string {
         return number_format(Number::distance($this->long, $this->lat, $long, $lat), 2, $decimal_point, $thousands_step);
     }

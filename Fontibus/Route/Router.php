@@ -11,6 +11,9 @@ class Router {
     private static string $group = '';
     private static string $namespace = '';
 
+    /**
+     * Initiate Router
+     */
     public static function init() {
         if ($handle = opendir(root_path().DIRECTORY_SEPARATOR.'routes')) {
             while (false !== ($file = readdir($handle))) {
@@ -125,6 +128,11 @@ class Router {
         self::$namespace = $before_namespace;
     }
 
+    /**
+     * Get Route
+     * @return Route
+     * @throws Exception
+     */
     public static function getRoute(): Route {
         $method = url()->getMethod();
         $request = url()->getRequest();
@@ -136,6 +144,11 @@ class Router {
         throw new Exception('Unknown request!', 404);
     }
 
+    /**
+     * Get route path by name
+     * @param string $name
+     * @return null
+     */
     public static function route(string $name) {
         if(empty($name))
             return null;

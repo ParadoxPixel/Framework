@@ -1,119 +1,81 @@
 <?php
 namespace Fontibus\Facades;
 
-use Fontibus\Database\DB;
-use Fontibus\String\Str;
+use Fontibus\Facades\ValidationRules\Rule;
 
 class Validator {
 
     private bool $passed = false;
+    private array $messages = [];
+    private array $errors = [];
 
-    public function __construct(array $data, array $settings) {
+    public function __construct(array $data, array $settings, array $messages = []) {
         foreach($settings as $key => $value) {
-            if(empty($value) || !is_array($value))
+            if(empty($value) || array_key_exists($key, $data))
                 continue;
 
-            $required = false;
-            foreach($value as $setting) {
-                if($setting === 'required') {
-                    if (!array_key_exists($key, $data))
-                        return;
+            if(!is_array($value))
+                $value = explode($value, '||');
 
-                    $required = true;
-                    continue;
-                } else if($setting === 'nullable')
-                    continue;
-
-                if (!array_key_exists($key, $data))
-                    break;
-
-                if(Str::startsWith($setting, 'regex:')) {
-                    $str = explode(':', $data[$key]);
-                    if(count($str) < 2)
-                        return;
-
-                    $regex = $str[1];
-                    if(!preg_match('/^(' . $regex . ')$/', $data[$key]))
-                        return;
-
-                    continue;
-                }
-
-                if(Str::startsWith($setting, 'same:')) {
-                    $str = explode(':', $data[$key]);
-                    if(count($str) < 2)
-                        return;
-
-                    $field = $str[1];
-                    if(array_key_exists($field, $data))
-                        return;
-
-                    if($data[$key] !== $data[$field])
-                        return;
-
-                    continue;
-                }
-
-                if(Str::startsWith($setting, 'min:') || Str::startsWith($setting, 'max:')) {
-                    $str = explode(':', $setting);
-                    if(count($str) < 2)
-                        return;
-
-                    $size = $str[1];
-                    if($str[0] === 'min')
-                        if(strlen($data[$key]) < $size)
-                            return;
-
-                    if($str[0] === 'max')
-                        if(strlen($data[$key]) > $size)
-                            return;
-
-                    continue;
-                }
-
-                if(Str::startsWith($setting, 'unique:')) {
-                    $str = explode(':', $setting);
-                    if(count($str) < 2)
-                        return;
-
-                    $table = $str[1];
-                    $result = DB::table($table)->where($key, '=', $data[$key])->count($key, 'count')->first();
-                    if(empty($result))
-                        return;
-
-                    if($result->count > 0)
-                        return;
-
-                    continue;
-                }
-
-                $result = $this->checkType($setting, $data[$key]);
-                if($result === false)
-                    return;
-            }
-
-            if($required && !array_key_exists($key, $data))
-                return;
+            $this->handleRule($key, $data[$key], $value);
         }
 
         $this->passed = true;
+        $this->messages = $messages;
     }
 
+    /**
+     * Check if data was correct
+     * @return bool
+     */
     public function passed(): bool {
         return $this->passed;
     }
 
-    public static function checkType($setting, $value): bool {
-        switch ($setting) {
-            case 'email':
-                return filter_var($value, FILTER_VALIDATE_EMAIL);
+    /**
+     * Handle rule for field, value
+     * @param string $field
+     * @param string $value
+     * @param string $rule
+     */
+    public function handleRule(string $field, string $value, string $rule): void {
+        $args = explode(':', $rule);
+        if(count($args) < 2)
+            $args[1] = '';
 
-            case 'boolean':
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        $rule = self::getRule($args[0]);
+        if(empty($rule))
+            return;
 
-            case 'password':
-                return preg_match('/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%?]).*$/', $value);
+        $check = $rule->check($args[1], $value);
+        if(!$check) {
+            $this->passed = false;
+
+            $message = array_key_exists($field, $this->messages) ? $this->messages[$field] : $rule->getMessage();
+            $message = str_replace(':field', $field, $message);
+            $message = str_replace(':value', $value, $message);
+            $this->errors[$field] = $message;
         }
+    }
+
+    /**
+     * Return instance of Rule class by name
+     * @param string $name
+     * @return Rule
+     */
+    public static function getRule(string $name): Rule {
+        if(class_exists($name)) {
+            $class = new $name();
+            if(is_subclass_of($class, 'Fontibus\Facades\ValidationRules\Rule'))
+                return $class;
+        }
+
+        $name = ucfirst($name).'Rule';
+        $rule = 'Fontibus\\Facades\\ValidationRules\\'.$name;
+        if(!class_exists($rule))
+            return null;
+
+        return new $rule();
     }
 
 }

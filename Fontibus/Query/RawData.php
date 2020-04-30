@@ -9,6 +9,10 @@ class RawData {
         $this->value = $value;
     }
 
+    /**
+     * Get raw value
+     * @return string
+     */
     public function getValue(): string {
         return $this->value;
     }

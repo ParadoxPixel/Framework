@@ -5,6 +5,11 @@ use Exception;
 
 class Logger {
 
+    /**
+     * Write line to log
+     * @param string $message
+     * @return bool
+     */
     public static function write(string $message) {
         $data = $message.PHP_EOL;
         try {

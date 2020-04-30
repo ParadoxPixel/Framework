@@ -10,6 +10,9 @@ class Url {
     private static string $scheme;
     private static string $host;
 
+    /**
+     * Parse url
+     */
     public static function init(): void {
         self::$method = $_SERVER['REQUEST_METHOD'];
         self::$scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';

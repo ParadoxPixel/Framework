@@ -3,6 +3,7 @@ namespace Fontibus\Hash;
 
 use Exception;
 /*
+ * NodeJS using Crypto Module to decrypt value passed from encrypt function
 let text = Buffer.from(json.payload, 'base64').toString('utf8');
 decrypt(function(result) { Do something });
 async function decrypt(text, promise) {
@@ -21,8 +22,7 @@ class UnsafeHash {
     const METHOD = 'aes-256-ctr';
 
     /**
-     * Encrypts (but does not authenticate) a message
-     *
+     * Encrypts a message
      * @param string $message - plaintext message
      * @param string $key - encryption key (raw binary expected)
      * @param boolean $encode - set to TRUE to return a base64-encoded
@@ -50,8 +50,7 @@ class UnsafeHash {
     }
 
     /**
-     * Decrypts (but does not verify) a message
-     *
+     * Decrypts a message
      * @param string $message - ciphertext message
      * @param string $key - encryption key (raw binary expected)
      * @param boolean $encoded - are we expecting an encoded string?

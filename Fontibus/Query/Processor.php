@@ -17,6 +17,12 @@ class Processor {
         $this->pdo = $pdo;
     }
 
+    /**
+     * Perform Query
+     * @param string $query
+     * @param array $vars
+     * @return PDOStatement
+     */
     public function query(string $query, array $vars = []): PDOStatement {
         $stmt = $this->pdo->prepare($query);
         foreach ($vars as $key => $value)
@@ -26,6 +32,11 @@ class Processor {
         return $stmt;
     }
 
+    /**
+     * Quote Input
+     * @param string $input
+     * @return false|string
+     */
     public function quote(string $input) {
         return $this->pdo->quote($input);
     }

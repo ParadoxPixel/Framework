@@ -3,6 +3,13 @@ namespace Fontibus\Number;
 
 class Number {
 
+    /**
+     * Calculate difference between numbers and make absolute if required
+     * @param float $number_1
+     * @param float $number_2
+     * @param bool $absolute
+     * @return float
+     */
     public static function difference(float $number_1, float $number_2, bool $absolute = true): float {
         $difference = $number_1 - $number_2;
         if($absolute)
@@ -11,6 +18,14 @@ class Number {
         return $difference;
     }
 
+    /**
+     * Distance between point A and B in kilometers
+     * @param float $lon1
+     * @param float $lat1
+     * @param float $lon2
+     * @param float $lat2
+     * @return float
+     */
     public static function distance(float $lon1, float $lat1, float $lon2, float $lat2): float {
         $pi80 = M_PI / 180;
         $lat1 *= $pi80;
